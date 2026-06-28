@@ -1,168 +1,113 @@
-# Requerimientos - Space Invaders
+# Requerimientos - Snack Catcher (Recolector de Chips)
 
 ## 1. Objetivo del sistema
-Desarrollar un videojuego tipo Space Invaders en Python utilizando Pygame, donde el jugador controle una nave, evite a los enemigos y pueda eliminarlos mediante disparos.
+Desarrollar un videojuego casual tipo arcade en Python utilizando Pygame, donde el jugador controle un recolector en la parte inferior de la pantalla para atrapar los snacks que caen, evitando obstáculos y subiendo de nivel mediante un sistema de puntuación acumulativo.
 
 ## 2. Alcance
 El sistema debe incluir:
-- Pantalla de inicio
-- Pantalla de carga
-- Pantalla de configuración
-- Jugabilidad principal
-- Sistema de vidas
-- Sistema de disparos
-- Selección de dificultad y enemigos
-- Sistema básico de puntuación
+- Pantalla de inicio (Menú principal con ingreso de nombre)
+- Pantalla de carga de recursos
+- Pantalla de configuración (Dificultad y selección de snacks activos)
+- Jugabilidad principal en pantalla dividida (Área de juego y Barra de nivel)
+- Sistema de vidas mediante corazones
+- Mecánica de caída aleatoria de objetos (Snacks benéficos y obstáculos)
+- Barra de progreso de nivel vertical a la derecha de la pantalla
 - Modo pausa y reinicio de partida
 
 ## 3. Requisitos funcionales
 
 ### RF-01: Pantalla de inicio
 El sistema debe mostrar una pantalla de inicio al iniciar la aplicación.
-- Debe mostrar el nombre del juego.
-- Debe permitir ingresar un nombre de jugador.
-- Debe permitir iniciar una nueva partida.
-- Debe permitir acceder a la configuración.
-- Si el nombre del jugador está vacío, debe asignarse un valor por defecto como "Jugador".
+- Debe mostrar el nombre del juego (ej. *Snack Catcher*).
+- Debe permitir ingresar el nombre del jugador. Si se deja vacío, se asignará "Invitado".
+- Debe tener botones para "Iniciar Partida" y "Configuración".
 
 ### RF-02: Pantalla de carga
-El sistema debe mostrar una pantalla de carga antes de iniciar una partida.
-- Debe aparecer al iniciar una nueva partida.
-- Debe indicar que el juego está cargando los recursos.
-- Debe transicionar automáticamente a la pantalla de juego en un tiempo breve.
+El sistema debe mostrar una pantalla de transición breve antes de la jugabilidad.
+- Debe indicar de forma visual que los recursos (imágenes de los chips, sonidos) se están cargando.
+- Pasará automáticamente al juego una vez completado el proceso.
 
 ### RF-03: Pantalla de configuración
-El sistema debe permitir al jugador configurar el juego antes de iniciar la partida.
-- Debe permitir seleccionar la dificultad de los enemigos.
-- Debe permitir seleccionar uno o varios enemigos para la partida.
-- Debe permitir activar o desactivar power-ups.
-- Debe permitir activar una opción de configuración aleatoria.
-- Debe permitir guardar o aplicar la configuración seleccionada.
-- Si no se selecciona ningún enemigo, el sistema debe usar una configuración por defecto con todos los enemigos disponibles.
+El sistema debe permitir personalizar los parámetros de la partida.
+- **Dificultad:** Modificará la velocidad inicial de caída y la frecuencia de los objetos.
+- **Filtro de Snacks:** Permitirá activar o desactivar qué tipos de snacks aparecerán.
+- **Opción Aleatoria:** Configura un ecosistema de juego con parámetros al azar.
+- Si no se toca nada, el juego iniciará con la configuración estándar (todos los snacks activos en dificultad media).
 
-### RF-04: Movimiento de la nave
-El sistema debe permitir que la nave se mueva de izquierda a derecha.
-- El movimiento debe controlarse con las flechas del teclado.
-- La nave no debe salir de los límites horizontales de la pantalla.
+### RF-04: El Recolector (Jugador)
+El sistema debe permitir controlar el contenedor de snacks en la base de la pantalla.
+- Se moverá únicamente de forma horizontal (izquierda/derecha) usando las flechas del teclado o el movimiento del mouse.
+- No debe ser capaz de rebasar los límites laterales asignados al área de juego.
 
-### RF-05: Disparo de la nave
-El sistema debe permitir que la nave dispare al presionar la tecla espacio.
-- El disparo debe generarse desde la posición frontal de la nave.
-- El disparo debe moverse hacia arriba.
-- El disparo debe eliminar o dañar a los enemigos si colisiona con ellos.
-- El disparo no debe atravesar indefinidamente la pantalla; debe eliminarse al salir de la misma.
+### RF-05: Generación y caída de Snacks
+El sistema debe hacer caer objetos desde la parte superior de forma continua y aleatoria.
+- Cada objeto aparecerá en una coordenada X al azar dentro del área de juego.
+- Los objetos caerán verticalmente hacia abajo con velocidades independientes según su tipo.
 
-### RF-06: Enemigos en pantalla
-El sistema debe mostrar enemigos en la parte superior de la pantalla.
-- Los enemigos deben aparecer en la zona superior del escenario.
-- Deben moverse horizontalmente y descender progresivamente durante la partida.
-- Deben afectar al jugador al colisionar con la nave.
+### RF-06: Tipos de Objetos (Snacks y Obstáculos)
+El sistema debe contar con al menos tres variantes de objetos con comportamientos distintos:
+1. **Chip Clásico:** Caída a velocidad normal. Otorga +10 puntos al ser atrapado.
+2. **Dorito de Fuego:** Caída rápida. Otorga +25 puntos al ser atrapado.
+3. **Chip Quemado (Obstáculo):** Caída irregular. Si el jugador lo atrapa por accidente, resta 1 vida (un corazón).
 
-### RF-07: Colisión con la nave
-El sistema debe detectar colisiones entre los enemigos y la nave.
-- Si un enemigo impacta con la nave, el jugador debe perder una vida.
-- Si un enemigo alcanza la zona inferior de la pantalla, la partida debe terminar.
-- Si el jugador se queda sin vidas, la partida debe terminar.
+### RF-07: Sistema de Vidas (Corazones) y Penalizaciones
+El sistema debe controlar la salud del jugador mediante un límite de fallos.
+- El jugador iniciará la partida con 3 vidas (representadas por corazones en la interfaz).
+- **Penalización por descuido:** Si un chip válido (Clásico o Dorito) toca el suelo sin ser recolectado, el jugador pierde 1 vida.
+- **Puntuación mínima:** Los puntos acumulados nunca podrán descender de cero (0).
+- Si las vidas llegan a 0, la partida terminará inmediatamente enviando al usuario a la pantalla de Fin de Juego.
 
-### RF-08: Sistema de vidas y puntuación
-El sistema debe implementar un sistema de vidas y puntuación para el jugador.
-- El jugador debe iniciar con 3 vidas.
-- Cada colisión con un enemigo debe disminuir una vida.
-- Cada enemigo destruido debe incrementar la puntuación del jugador.
-- La partida debe terminar cuando el jugador pierda todas sus vidas o cuando se cumpla la condición de victoria definida.
+### RF-08: Barra de Nivel Vertical (Interfaz Derecha)
+El sistema debe incluir un panel lateral derecho dedicado al progreso del nivel.
+- La pantalla estará dividida: 85% para el área de juego y 15% para el panel de nivel.
+- Contendrá una barra vertical que se rellenará proporcionalmente al puntaje actual del jugador.
+- **Mecánica de Level Up:** Cada 100 puntos acumulados, el jugador sube de nivel, la barra se vacía y la velocidad general de caída de los snacks aumenta un 15%.
 
-### RF-09: Dificultad de los enemigos
-El sistema debe permitir ajustar la dificultad de los enemigos.
-- Debe existir al menos una opción de dificultad fácil, media y difícil.
-- La dificultad debe modificar al menos los siguientes parámetros: velocidad de los enemigos, frecuencia de aparición y cantidad de daño recibido por la nave.
-
-### RF-10: Selección de enemigos
-El sistema debe permitir seleccionar los enemigos que participarán en la partida.
-- Debe permitirse elegir un solo enemigo.
-- Debe permitirse elegir varios enemigos.
-- Debe existir un conjunto mínimo de enemigos disponibles: básico, rápido y resistente.
-- Si no se selecciona ninguno, se usará la configuración por defecto con todos los enemigos disponibles.
-
-### RF-11: Power-ups
-El sistema debe permitir la activación de power-ups en la partida.
-- En el MVP debe existir al menos un power-up: disparo doble.
-- Si el power-up está habilitado, debe aparecer de forma aleatoria durante la partida.
-- Al activarse, debe modificar temporalmente el comportamiento del disparo del jugador.
-
-### RF-12: Juego principal
-El sistema debe iniciar una partida válida una vez seleccionada la configuración.
-- La partida debe mostrar la nave, los enemigos y los indicadores de estado del jugador.
-- El juego debe mantenerse en ejecución hasta que el jugador pierda todas sus vidas, elimine a todos los enemigos o decida salir.
-- El jugador debe poder pausar y reanudar la partida con la tecla Escape.
-- El jugador debe poder reiniciar la partida desde la pantalla de fin de juego.
+### RF-09: Juego Principal e Interfaz (HUD)
+El sistema debe integrar todos los componentes en el bucle principal de juego.
+- En la parte superior del área de juego se mostrarán de forma clara: el puntaje actual, el nivel alcanzado y los corazones restantes.
+- Presionar la tecla **Escape** pausará el juego, congelando la caída de los objetos.
+- Al perder, se mostrará la pantalla de derrotado con la puntuación final lograda y la opción de "Reiniciar Partida" o "Volver al Menú".
 
 ## 4. Reglas de negocio
-- La nave solo puede moverse horizontalmente.
-- Los disparos solo deben avanzar en una dirección.
-- Los enemigos deben descender progresivamente durante la partida.
-- La dificultad debe afectar la experiencia de juego.
-- La configuración elegida debe aplicarse antes de iniciar la partida.
-- La puntuación debe actualizarse en tiempo real durante la partida.
-- La partida debe mostrar un estado claro de victoria o derrota al finalizar.
+- El recolector solo tiene permitido el desplazamiento en el eje horizontal.
+- Los objetos que salgan de la pantalla por la parte inferior (hayan sido atrapados o no) deben ser destruidos de la memoria del sistema.
+- Subir de nivel debe aplicar el incremento de velocidad de manera inmediata en los objetos activos en pantalla.
+- Un obstáculo (Chip Quemado) que toque el suelo de forma limpia no penalizará al jugador; solo hace daño si es atrapado.
 
 ## 5. Requisitos no funcionales
 
 ### RNF-01: Tecnológico
-- El juego debe desarrollarse en Python.
-- Debe utilizar la librería Pygame.
+- El juego se desarrollará en el lenguaje Python utilizando exclusivamente la librería Pygame para el motor de juego y renderizado.
 
 ### RNF-02: Rendimiento
-- El juego debe ejecutarse de forma fluida en una computadora estándar.
-- La lógica de movimiento y colisiones debe responder sin retrasos significativos.
+- El juego debe mantener una tasa estable de 60 FPS en hardware comercial estándar, garantizando que el refresco de las colisiones sea preciso y fluido.
 
 ### RNF-03: Usabilidad
-- Los controles deben ser intuitivos.
-- La interfaz debe ser clara para un jugador nuevo.
-- Los textos de menú y juego deben ser legibles.
-
-### RNF-04: Compatibilidad
-- El juego debe poder ejecutarse en un entorno con Python y Pygame instalados.
+- La división de la pantalla debe ser intuitiva; la barra de nivel debe ser lo suficientemente vistosa (cambio de color o destello al subir de nivel) para alertar al jugador sin distraerlo de la caída de los chips.
 
 ## 6. Criterios de aceptación
 
-### CA-01
-Si el jugador inicia la aplicación, debe ver la pantalla de inicio.
+### CA-01: Inicio y Registro
+Al abrir el juego, se despliega el menú principal. Si el usuario da clic en jugar sin poner nombre, el HUD de juego debe mostrar el texto "Jugador: Invitado".
 
-### CA-02
-Si el jugador selecciona iniciar partida, debe aparecer la pantalla de carga y luego el juego.
+### CA-02: Movimiento Limitado
+Al arrastrar el mouse o presionar las flechas hacia los extremos, el recolector debe detenerse en seco justo en los bordes del área de juego, sin invadir el panel de la barra de nivel a la derecha.
 
-### CA-03
-Si el jugador usa las flechas del teclado, la nave debe moverse de izquierda a derecha sin salir de los límites de la pantalla.
+### CA-03: Detección de Colisiones
+- Si la caja de colisión (hitbox) del recolector toca un *Chip Clásico*, el marcador debe sumar 10 puntos de inmediato.
+- Si toca un *Chip Quemado*, el contador de corazones debe disminuir en 1.
 
-### CA-04
-Si el jugador presiona espacio, debe aparecer un disparo desde la nave y este debe moverse hacia arriba.
+### CA-04: Transición de Nivel
+Al llegar exactamente a 100 puntos, la barra lateral debe vaciarse por completo, el indicador de nivel debe cambiar de "Nivel 1" a "Nivel 2" y los objetos en pantalla deben acelerar visiblemente su descenso.
 
-### CA-05
-Si un enemigo colisiona con la nave, el jugador debe perder una vida.
+### CA-05: Game Over por Descuido
+Si el jugador permite que 3 snacks saludables toquen el fondo de la pantalla, el juego se detiene y redirige a la interfaz de puntuación final.
 
-### CA-06
-Si el jugador selecciona una dificultad, esa configuración debe aplicarse en la partida.
-
-### CA-07
-Si el jugador elige un enemigo específico o varios, esos enemigos deben aparecer en la partida.
-
-### CA-08
-Si el jugador elimina a todos los enemigos, debe mostrarse un estado de victoria y la partida debe finalizar.
-
-### CA-09
-Si el jugador presiona Escape durante la partida, el juego debe pausar o reanudar según el estado actual.
-
-## 7. Versión propuesta de MVP
-Para una primera versión, se recomienda implementar:
-- Pantalla de inicio
-- Pantalla de carga
-- Pantalla de configuración básica
-- Movimiento de la nave
-- Disparos
-- Enemigos con movimiento descendente
-- Sistema de vidas
-- Sistema de puntuación
-- Dificultad simple
-- Selección de enemigos
-- Power-up de disparo doble
-- Pausa y reinicio de partida
+## 7. Alcance del MVP (Mínimo Producto Viable)
+Para la primera versión funcional en desarrollo local, se priorizará:
+1. Ventana de juego con la pantalla dividida (Área izquierda y contenedor de la barra derecha).
+2. Movimiento fluido del recolector en la base.
+3. Lógica de caída y colisión para el *Chip Clásico* y el *Chip Quemado*.
+4. Sistema de puntuación, barra de nivel funcional que se llene hasta los 100 puntos y el contador de 3 vidas.
+5. Pantalla básica de reinicio al perder las vidas.
